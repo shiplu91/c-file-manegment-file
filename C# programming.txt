@@ -1,0 +1,1633 @@
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.Linq;
+using System.Text;
+using System.Data.Sql;
+using System.Data.SqlClient;
+using System.Windows.Forms;
+
+namespace WindowsFormsApplication2
+{
+    public partial class Form2 : Form
+    {
+        public Form2()
+        {
+            InitializeComponent();
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+=============//======DataGridview Click Search texBox======================================//=============
+    private void txtbox_CellMouseDoubleClick(object sender, DataGridViewCellMouseEventArgs e)
+        {
+            if (txtbox.SelectedRows.Count >= 0)
+            {
+
+                inp.Text = txtbox.SelectedRows[0].Cells[0].Value.ToString();
+                inName.Text = txtbox.SelectedRows[0].Cells[1].Value.ToString();
+                inGender.Text = txtbox.SelectedRows[0].Cells[2].Value.ToString();
+                inage.Text = txtbox.SelectedRows[0].Cells[3].Value.ToString();
+               inPhone.Text = txtbox.SelectedRows[0].Cells[4].Value.ToString();
+              indisease.Text = txtbox.SelectedRows[0].Cells[5].Value.ToString();
+              instatus.Text = txtbox.SelectedRows[0].Cells[6].Value.ToString();
+             incheck.Text = txtbox.SelectedRows[0].Cells[7].Value.ToString();
+             inRoomNo.Text= txtbox.SelectedRows[0].Cells[8].Value.ToString();
+              inType.Text= txtbox.SelectedRows[0].Cells[9].Value.ToString();
+              inBuilding.Text = txtbox.SelectedRows[0].Cells[10].Value.ToString();
+            }
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+================///=====================Sql Data Save password Login========================//============
+
+
+
+
+   SqlConnection con = new SqlConnection("Data Source=LAPTOP-O86D32ES;Initial Catalog=booking;Integrated Security=True");
+        private void log_Click(object sender, EventArgs e)
+        {
+            if (username.Text == "" || txtpass.Text == "")
+            {
+
+                MessageBox.Show("Wrong username and password");
+
+
+
+
+
+            }
+
+
+            else
+            {
+
+                try
+                {
+
+                    con.Open();
+                    SqlDataAdapter sda = new SqlDataAdapter("select COUNT(*) from Staff where Name='" + username.Text + "' and Password='" + txtpass.Text + "'", con);
+                    DataTable dt = new DataTable();
+                    sda.Fill(dt);
+                    if (dt.Rows[0][0].ToString() == "1")
+                    {
+
+                        new main().Show();
+                        this.Hide();
+
+
+
+
+
+                    }
+                    else
+                    {
+                        MessageBox.Show("Error username and password");
+
+                        username.Text = "";
+                        txtpass.Text = "";
+
+
+                    }
+
+
+                    con.Close();
+
+
+
+
+
+
+
+                }
+                catch (Exception)
+                {
+
+                    MessageBox.Show("Ex.message");
+
+                }
+
+
+
+            }
+          
+
+
+
+        }
+
+
+
+
+
+
+
+================Chech box click and show text box============================////////////==================================
+
+
+
+ private void beercheck_CheckStateChanged(object sender, EventArgs e)
+        {
+            if (beercheck.Checked == true)
+            {
+
+                beerprice.Enabled = true;
+                beerQuant.Enabled = true;
+
+
+
+
+
+            }
+            else
+            {
+
+                beerprice.Enabled = false;
+                beerQuant.Enabled = false;
+                beerprice.Text = "";
+                beerQuant.Text = "";
+
+            
+            
+            
+            }
+        }
+
+
+
+
+=================//=============================//======Check box=======Calculation==========================
+    private void button1_Click(object sender, EventArgs e)
+        {
+            int beer=0, soda=0, wine=0,water=0,juice=0;
+            if (beercheck.Checked == true && beerprice.Text == "" && beerQuant.Text == "")
+            {
+
+
+                MessageBox.Show("Enter Q");
+
+
+
+            }
+            else
+
+            {
+
+                beer = Convert.ToInt32(beerprice.Text) * Convert.ToInt32(beerQuant.Text);
+            
+            
+            
+            
+            
+            
+            }
+
+            if (Sodacheck.Checked == true && sodapric.Text == "" && sodaquant.Text == "")
+            {
+
+
+                MessageBox.Show("Enter Q");
+
+
+
+            }
+            else
+            {
+
+                soda = Convert.ToInt32(sodapric.Text) * Convert.ToInt32(sodaquant.Text);
+
+
+
+
+
+
+            }
+
+
+
+
+
+            if (winecheck.Checked == true && winepric.Text == "" && winequant.Text == "")
+            {
+
+
+                MessageBox.Show("Enter Q");
+
+
+
+            }
+            else
+            {
+
+                wine = Convert.ToInt32(winepric.Text) * Convert.ToInt32(winequant.Text);
+
+
+
+
+
+
+            }
+
+
+
+            if (watercheck.Checked == true && waterpric.Text == "" && waterquant.Text == "")
+            {
+
+
+                MessageBox.Show("Enter Q");
+
+
+
+            }
+            else
+            {
+
+              water   = Convert.ToInt32(waterpric.Text) * Convert.ToInt32(waterquant.Text);
+
+
+
+
+
+
+            }
+
+
+
+
+            if(jaicecheck.Checked == true && jaiceprice.Text == "" && jaicequant.Text == "")
+            {
+
+
+                MessageBox.Show("Enter Q");
+
+
+
+            }
+            else
+            {
+
+                juice = Convert.ToInt32(jaiceprice.Text) * Convert.ToInt32(jaicequant.Text);
+
+
+
+
+
+
+            }
+
+
+            int bevcost = beer + soda + wine + water + juice;
+            DrinkcostTbl.Text =""+ bevcost;
+
+
+
+
+
+        }
+=====================//============radio button select//////=======and check box===========show==========
+
+
+
+ private void txthigh_CheckedChanged(object sender, EventArgs e)
+        {
+            txthigh.ForeColor = System.Drawing.Color.Green;
+            txtmedium.ForeColor = System.Drawing.Color.Red;
+            txtlow.ForeColor = System.Drawing.Color.Red;
+            cmb_items.Items.Clear();
+            cmb_items.Items.Add("Select High Room Number 1");
+            cmb_items.Items.Add("Select High Room Number 2");
+            cmb_items.Items.Add("Select High Room Number 3");
+            cmb_items.Items.Add("Select High Room Number 4");
+            cmb_items.Items.Add("Select High Room Number 5");
+            cmb_items.Items.Add("Select High Room Number 6");
+            cmb_items.Items.Add("Select High Room Number 7");
+        }
+===================//=================Select comobox and text box show prices====================//=============
+   private void cmb_items_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (cmb_items.SelectedItem.ToString() == "Select High Room Number 1")
+            {
+
+
+                roomprice.Text = "3200";
+            
+            
+            }
+
+          else  if (cmb_items.SelectedItem.ToString() == "Select High Room Number 2")
+            {
+
+
+                roomprice.Text = "3420";
+
+
+            }
+
+
+
+
+
+          else  if (cmb_items.SelectedItem.ToString() == "Select High Room Number 3")
+            {
+
+
+                roomprice.Text = "3800";
+
+
+            }
+
+
+
+
+
+
+            else if (cmb_items.SelectedItem.ToString() == "Select High Room Number 4")
+            {
+
+
+                roomprice.Text = "3900";
+
+
+            }
+
+
+
+            else if (cmb_items.SelectedItem.ToString() == "Select High Room Number 5")
+            {
+
+
+                roomprice.Text = "4000";
+
+
+            }
+
+
+
+            else if (cmb_items.SelectedItem.ToString() == "Select High Room Number 6")
+            {
+
+
+                roomprice.Text = "4800";
+
+
+            }
+
+
+
+
+            else if (cmb_items.SelectedItem.ToString() == "Select High Room Number 7")
+            {
+
+
+                roomprice.Text = "5000";
+
+
+            }
+
+
+
+
+            else if (cmb_items.SelectedItem.ToString() == "Select Medium Room Number 1")
+            {
+
+
+                roomprice.Text = "2000";
+
+
+            }
+
+
+
+            else if (cmb_items.SelectedItem.ToString() == "Select Medium Room Number 2")
+            {
+
+
+                roomprice.Text = "2200";
+
+
+            }
+
+
+
+            else if (cmb_items.SelectedItem.ToString() == "Select Medium Room Number 3")
+            {
+
+
+                roomprice.Text = "2300";
+
+
+            }
+
+
+
+
+            else if (cmb_items.SelectedItem.ToString() == "Select Medium Room Number 4")
+            {
+
+
+                roomprice.Text = "2400";
+
+
+            }
+
+
+
+            else if (cmb_items.SelectedItem.ToString() == "Select Medium Room Number 5")
+            {
+
+
+                roomprice.Text = "2500";
+
+
+            }
+
+
+
+
+            else if (cmb_items.SelectedItem.ToString() == "Select Medium Room Number 6")
+            {
+
+
+                roomprice.Text = "2600";
+
+
+            }
+
+
+
+
+            else if (cmb_items.SelectedItem.ToString() == "Select Medium Room Number 7")
+            {
+
+
+                roomprice.Text = "2800";
+
+
+            }
+
+
+
+
+
+
+
+
+
+            else if (cmb_items.SelectedItem.ToString() == "Select Low Room Number 1")
+            {
+
+
+                roomprice.Text = "1200";
+
+
+            }
+
+
+
+            else if (cmb_items.SelectedItem.ToString() == "Select Low Room Number 2")
+            {
+
+
+                roomprice.Text = "1400";
+
+
+            }
+
+
+
+            else if (cmb_items.SelectedItem.ToString() == "Select Low Room Number 3")
+            {
+
+
+                roomprice.Text = "1500";
+
+
+            }
+
+
+
+            else if (cmb_items.SelectedItem.ToString() == "Select Low Room Number 4")
+            {
+
+
+                roomprice.Text = "1600";
+
+
+            }
+
+
+
+            else if (cmb_items.SelectedItem.ToString() == "Select Low Room Number 5")
+            {
+
+
+                roomprice.Text = "1700";
+
+
+            }
+
+
+
+
+
+
+            else if (cmb_items.SelectedItem.ToString() == "Select Low Room Number 6")
+            {
+
+
+                roomprice.Text = "1800";
+
+
+            }
+
+
+
+
+
+            else if (cmb_items.SelectedItem.ToString() == "Select Low Room Number 7")
+            {
+
+
+                roomprice.Text = "1900";
+
+
+            }
+
+
+            //else
+            //{
+            //    roomprice.Text = "0";
+
+
+            //}
+
+
+
+
+
+
+
+
+
+        }
+
+
+
+
+
+
+====================//==============Quality show total box===================//===================
+ private void roomQty_TextChanged(object sender, EventArgs e)
+        {
+            if (roomQty.Text.Length > 0)
+            {
+                txttotal.Text = (Convert.ToInt16(roomprice.Text) * Convert.ToInt16(roomQty.Text)).ToString();
+            }
+        }
+=====================//=============Button click Sub total text box==========================//===================
+ private void button3_Click(object sender, EventArgs e)
+        {
+
+
+          
+
+
+            subtotal.Text = (Convert.ToInt16(subtotal.Text) + Convert.ToInt16(txttotal.Text)).ToString();
+        }
+=============//======================//============Discount===========//================Show the text button=========
+ private void discount_TextChanged(object sender, EventArgs e)
+        {
+            if (discount.Text.Length > 0)
+            {
+
+                txtnet.Text = (Convert.ToInt16(subtotal.Text) - Convert.ToInt16(discount.Text)).ToString();
+            
+            
+            
+            
+            }
+        }
+
+=====================//==================//=================Paid=========show the balance button=============//=
+
+
+ private void txtpaid_TextChanged(object sender, EventArgs e)
+        {
+            if (txtpaid.Text.Length > 0)
+            {
+
+
+                txtbalance.Text = (Convert.ToInt16(txtnet.Text) - Convert.ToInt16(txtpaid.Text)).ToString();
+            
+            
+            
+            
+            }
+        }
+
+=====================//===============Search================//=================textBox show===================
+
+
+
+
+
+        private void btnseach_Click(object sender, EventArgs e)
+        {
+             string Sourch = "Data Source=LAPTOP-O86D32ES;Initial Catalog=hospital;Integrated Security=True";
+            SqlConnection con = new SqlConnection(Sourch);
+            con.Open();
+            MessageBox.Show("seach");
+            string sqlSelectQuery = "select * from patiens where  PatiensID=" + int.Parse(textBox2.Text);
+            SqlCommand cmd = new SqlCommand(sqlSelectQuery, con);
+            SqlDataReader dr = cmd.ExecuteReader();
+            if (dr.Read())
+            {
+
+                txtName.Text = (dr["Name"].ToString());
+                txtBlood.Text = (dr["Blood"].ToString());
+                txtAge.Text = (dr["AGE"].ToString());
+                txtdateTimePicker1.Text = (dr["DateOfBrith"].ToString());
+                txtAddress.Text = (dr["Address"].ToString());
+                comboBox1.Text = (dr["Gender"].ToString());
+                txtPhone.Text = (dr["Phone Number"].ToString());
+
+            
+            
+            }
+            con.Close();
+        }
+        }
+//===========================================//=========================EXIt========================================//
+        private void BtnExit_Click(object sender, EventArgs e)
+        {
+            MeExit();
+        }
+
+
+        private void MeExit()
+        { 
+        
+        
+        
+            DialogResult iExit;
+            iExit = MessageBox.Show ("confirm if you want to exit", "Save dataGridView1", MessageBoxButtons.YesNo, MessageBoxIcon.Information);
+
+            if (iExit == DialogResult.Yes)
+            {
+
+                Application.Exit();
+            
+            
+            
+            }
+        
+        
+        
+        
+        }
+//========================================//===========================ADD==============//==============================
+        private void BtnAdd_Click(object sender, EventArgs e)
+        {
+            dataGridView1.Rows.Add(txtPatiens.Text,txtName.Text,txtBlood.Text,txtAge.Text,txtdateTimePicker1.Text,txtAddress.Text,txtcomboBox1.Text);
+        }
+//==========================================//=================Delete================//==============================
+
+        private void BtbDelete_Click(object sender, EventArgs e)
+        {
+            iDelete();
+        }
+     
+
+        private void iDelete()
+        {
+
+
+            foreach (DataGridViewRow item in this.dataGridView1.SelectedRows)
+            {
+
+
+
+
+                dataGridView1.Rows.RemoveAt(item.Index);
+            
+            
+            
+            
+            }
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        }
+
+
+//==================================//=====================Save====================//====================================
+        private void BtnSave_Click(object sender, EventArgs e)
+        {
+
+            try
+            {
+
+
+
+
+
+                int PatiensID = Convert.ToInt32(txtPatiens.Text);
+                string Name = txtName.Text;
+                string Blood = txtBlood.Text;
+                string Age = txtAge.Text;
+                string DateofBrith = txtdateTimePicker1.Text;
+                string Address = txtAddress.Text;
+                string Gender = txtcomboBox1.Text;
+
+
+
+
+                SqlConnection con = new SqlConnection();
+
+
+
+                con.ConnectionString = "Data Source=LAPTOP-O86D32ES;Initial Catalog=hospital;Integrated Security=True";
+                SqlCommand cmd = new SqlCommand();
+                cmd.Connection = con;
+                cmd.CommandText = "insert into  Patiens values ('" + PatiensID + "','" + Name + "','" + Blood + "','" + Age + "','" + DateofBrith + "','" + Address + "','" + Gender + "')";
+                SqlDataAdapter DA = new SqlDataAdapter(cmd);
+                DataSet DS = new DataSet();
+                DA.Fill(DS);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+            }
+            catch (Exception)
+            {
+
+
+                MessageBox.Show("Patiens id allready exit 'or' Any field is empty 'or' Data is in Wrong Format.");
+            
+            
+            
+            }
+
+
+            MessageBox.Show("Saved!");
+            txtPatiens.Clear();
+            txtName.Clear();
+            txtBlood.Clear();
+            txtAge.Clear();
+            txtAddress.Clear();
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        }
+
+
+==============//==================Id Display Automatic Show====one to one=============Main From Copy===gercustomer();==
+   public void gercustomer()
+        {
+
+            SqlConnection con = new SqlConnection("Data Source=LAPTOP-O86D32ES;Initial Catalog=hospitalmanagment;Integrated Security=True");
+
+            string proid;
+            string quary = "select No from Registraction  order by  No Desc  ";
+            con.Open();
+            SqlCommand cmd = new SqlCommand(quary, con);
+            SqlDataReader dr = cmd.ExecuteReader();
+            if (dr.Read())
+            {
+
+                int id = int.Parse(dr[0].ToString()) + 1;
+                proid = id.ToString("00000");
+
+
+
+
+
+            }
+
+            else if (Convert.IsDBNull(dr))
+            {
+
+
+                proid = ("00011");
+
+
+
+            }
+
+            else
+            {
+                proid = ("00011");
+
+
+
+            }
+            con.Close();
+            txtno.Text = proid.ToString();
+
+        }
+
+
+
+
+
+
+//======================//==================Sreach=================//=============dataGridView========//=================
+        private void TextChanged(object sender, EventArgs e)
+        {
+            if (textBox1.Text != " ")
+
+
+
+
+
+            {
+
+                int PatiensID = Convert.ToInt32(textBox1.Text);
+
+
+
+
+                SqlConnection con = new SqlConnection();
+
+
+
+                con.ConnectionString = "Data Source=LAPTOP-O86D32ES;Initial Catalog=hospital;Integrated Security=True";
+                SqlCommand cmd = new SqlCommand();
+                cmd.Connection = con;
+                cmd.CommandText = "select * from patiens where patiensID = " + PatiensID + "";
+                SqlDataAdapter DA = new SqlDataAdapter(cmd);
+                DataSet DS = new DataSet();
+
+                DA.Fill(DS);
+                dataGridView2.DataSource = DS.Tables[0];
+
+            
+            
+            
+            
+            
+            
+            }
+        }
+////==========================//======================Save=====================//=============================//
+        private void BtnTpi_Click(object sender, EventArgs e)
+        {
+            try
+            {
+
+
+
+
+
+
+
+
+                int NewPatiensID = Convert.ToInt32(txtNew.Text);
+                string Name = txtN.Text;
+                string Reports = txtRepots.Text;
+                string Blood =txtBlo.Text;
+                string Age = txtAg.Text;
+                string DoctorName = txtDoctor.Text;
+                string DateOfBrith = txtDate.Text;
+              
+                string Gender =txtGender.Text;
+
+
+
+
+                SqlConnection con = new SqlConnection();
+
+
+
+                con.ConnectionString = "Data Source=LAPTOP-O86D32ES;Initial Catalog=hospital;Integrated Security=True";
+                SqlCommand cmd = new SqlCommand();
+                cmd.Connection = con;
+                cmd.CommandText = "insert into  shiplu values ('" + NewPatiensID + "','" + Name + "','" + Reports + "','" + Blood + "','" + Age + "','" + DoctorName + "','" + DateOfBrith + "','" + Gender +"')";
+                SqlDataAdapter DA = new SqlDataAdapter(cmd);
+                DataSet DS = new DataSet();
+                DA.Fill(DS);
+
+
+
+
+
+
+
+
+
+
+
+            }
+
+            catch (Exception)
+            {
+
+
+                MessageBox.Show("Saved!Patiens More");
+            
+            
+            
+            
+            }
+
+
+
+        }
+//===================================//==============Reset==================//======================================
+        private void btnReset_Click(object sender, EventArgs e)
+        {
+            iReset();
+
+
+          
+
+           
+        }
+
+
+        private void iReset()
+        { 
+        //=====================================Clear All Textbox Data ====================================================
+            foreach (var c in this.Controls)
+            {
+
+
+                if (c is TextBox)
+                {
+
+                    ((TextBox)c).Text = string.Empty;
+                
+                
+                }
+            
+            
+            }
+        
+        //=================================================Clear the DataGirdView=============================================
+            int numRows = dataGridView1.Rows.Count;
+            for (int i = 0; i < numRows; i++)
+            {
+
+                try
+                {
+
+
+                    int max = dataGridView1.Rows.Count - 1;
+                    dataGridView1.Rows.Remove(dataGridView1.Rows[max]);
+
+
+                }
+                catch (Exception exe)
+                {
+
+                    MessageBox.Show("All rows are to be deleted" + exe, "DataGridView Delete", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                
+                
+                
+                }
+                MessageBox.Show("Reset");
+                txtPatiens.Clear();
+                txtName.Clear();
+                txtBlood.Clear();
+                txtAge.Clear();
+                txtAddress.Clear();
+            
+            }
+        
+        
+        
+        
+        }
+//====================================//================Refresh=====================/////////////==================
+        private void BtnRefresh_Click(object sender, EventArgs e)
+        {
+            MessageBox.Show("Refresh!");
+            txtNew.Clear();
+            txtN.Clear();
+            txtRepots.Clear();
+            txtBlo.Clear();
+            txtAg.Clear();
+
+            txtDoctor.Clear();
+
+
+            
+
+
+
+
+
+
+
+            
+        }
+//======================================================//==========Relashonship===============================
+
+        private void dataGridView3_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+
+        }
+
+        private void BtnFull_Click(object sender, EventArgs e)
+        {
+
+            SqlConnection con = new SqlConnection();
+
+
+
+            con.ConnectionString = "Data Source=LAPTOP-O86D32ES;Initial Catalog=hospital;Integrated Security=True";
+            SqlCommand cmd = new SqlCommand();
+            cmd.Connection = con;
+            cmd.CommandText = "Select * from patiens inner join shiplu on patiens.patiensID = shiplu.[New Patiens ID]";
+            SqlDataAdapter DA = new SqlDataAdapter(cmd);
+            DataSet DS = new DataSet();
+
+            DA.Fill(DS);
+            dataGridView3.DataSource = DS.Tables[0];
+        }
+
+        
+    
+      
+    }
+}
+//===========================================//===========sum========================//============
+
+    private void button1_Click(object sender, EventArgs e)
+        {
+            string stringshiplu = shiplutextBox1.Text.Trim().ToString();
+            string stringvalue = valuetextBox2.Text.Trim().ToString();
+            if (!string.IsNullOrEmpty(stringshiplu) && !string.IsNullOrEmpty(stringvalue))
+            {
+
+
+
+                int intshiplu = 0;
+                Double doublevalue = 0.0;
+                if (int.TryParse(stringshiplu, out intshiplu) && Double.TryParse(stringvalue, out doublevalue))
+                {
+                    Double doubleResult = (doublevalue + intshiplu) ;
+                    label2.Text =" Result:" + doubleResult.ToString("#,#00.0000");
+                   
+
+
+                }
+
+                else {
+
+                    MessageBox.Show("Attempt conversion of" + stringshiplu + " or " + stringvalue + " failed. ", "C# :shiplu", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                
+                }
+            
+//================================//===================SUM + - / * ==================================//=================
+
+
+
+
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            double num1 = double.Parse(textBox1.Text);
+            double num2 = double.Parse(textBox2.Text);
+            double result = 0;
+           if(radioButton1.Checked == true)//plus
+            {
+
+
+
+                result = num1 + num2;
+            
+            
+            
+            }
+           else if (radioButton2.Checked == true)//plus ;
+           {
+
+
+
+               result = num1 - num2;
+
+
+
+           }
+        
+            textBox3.Text = result.ToString();
+
+
+        }
+    }
+
+
+
+
+
+
+
+==============//==================Graphics Chart================///=======================================================
+
+
+
+
+ private void button2_Click(object sender, EventArgs e)
+        {
+            chart1.Series["patien"].Points.AddXY("David", 422);
+            chart1.Series["patien"].Points.AddXY("ron", 502);
+            chart1.Series["patien"].Points.AddXY("elbert", 322);
+            chart1.Series["patien"].Points.AddXY("nobel", 622);
+            //Doctor Chart
+            chart3.Series["Doctor"].Points.AddXY("D1", 402);
+            chart3.Series["Doctor"].Points.AddXY("D2", 312);
+            chart3.Series["Doctor"].Points.AddXY("D3", 222);
+            chart3.Series["Doctor"].Points.AddXY("D4", 622);
+            // performations Chart
+
+            chart2.Series["Performations"].Points.AddXY("2017", 70);
+            chart2.Series["Performations"].Points.AddXY("2018", 40);
+            chart2.Series["Performations"].Points.AddXY("2019", 90);
+            chart2.Series["Performations"].Points.AddXY("2020", 20);
+            // result chart
+
+
+            chart4.Series["Performations"].Points.AddXY("2017", 20);
+            chart4.Series["Performations"].Points.AddXY("2018", 40);
+            chart4.Series["Performations"].Points.AddXY("2019", 90);
+            chart4.Series["Performations"].Points.AddXY("2020", 70);
+
+}
+
+
+
+=========================//====================Log in progressbar==============//=================================
+namespace shiplu
+{
+    public partial class Form1 : Form
+    {
+        public Form1()
+        {
+            InitializeComponent();
+        }
+
+        private void btnlogin_Click(object sender, EventArgs e)
+        {
+            timer1.Enabled = true;
+            if (txtuser.Text == "user")
+            {
+
+                if (txtpass.Text == "pass")
+                {
+                }
+                else
+                {
+                    MessageBox.Show("Error:Please have enter the correct informations");
+                
+                
+                }
+            
+            
+            }
+            else
+            {
+                MessageBox.Show("Error:Please have enter the correct informations");
+
+
+            }
+            
+        }
+
+        private void timer1_Tick(object sender, EventArgs e)
+        {
+            progressBar1.Value = progressBar1.Value + 2;
+            if (progressBar1.Value>99) 
+            {
+
+                new Shiplu_khandakar().Show();
+                this.Hide();
+                timer1.Enabled = false;
+            
+            
+            
+            
+            }
+
+====================//=============Save UPdate===============//============= update============//================
+   private void BtnUpdate_Click(object sender, EventArgs e)
+        {
+            SqlConnection con = new SqlConnection("Data Source=LAPTOP-O86D32ES;Initial Catalog=hospital;Integrated Security=True");
+            SqlCommand cmd = new SqlCommand(@"UPDATE [hospital].[dbo].[patiens]
+   SET [PatiensID] = '" + txtPatiens.Text + "',[Name] ='" + txtName.Text + "',[Blood] = '" + txtBlood.Text + "',[AGE] = '" + txtAge.Text + "' ,[DateOfBrith] = '" + txtdateTimePicker1.Text + "' ,[Address] = '" + txtAddress.Text + "',[Gender] = '" + comboBox1.Text + "',[Phone Number] = '" + txtPhone.Text + "' WHERE [PatiensID]='" + txtPatiens.Text + "'", con);
+            con.Open();
+            cmd.ExecuteNonQuery();
+            MessageBox.Show("Update");
+            con.Close();
+
+            
+
+
+
+==================//===============Delete Sql Server Save File ============//===============//===============
+ {
+            SqlConnection con = new SqlConnection("Data Source=LAPTOP-O86D32ES;Initial Catalog=hospital;Integrated Security=True");
+            SqlCommand cmd = new SqlCommand(@"DELETE FROM [hospital].[dbo].[patiens]
+      WHERE [PatiensID]='" + txtPatiens.Text + "' ", con);
+
+
+
+            con.Open();
+            cmd.ExecuteNonQuery();
+            MessageBox.Show("Delete");
+            con.Close();
+
+
+
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+==================//===============Wroked Day job============//===============//===============
+
+
+ int Dailybase, total;
+        private void button2_Click(object sender, EventArgs e)
+        {
+            if (txtPosition.Text == "")
+            {
+
+                MessageBox.Show("Select");
+
+            }
+            else if (wrokedTB.Text == "" || Convert.ToInt32(wrokedTB.Text) > 28)
+            {
+
+
+                MessageBox.Show("Please:Enter the number");
+
+
+            }
+            else
+            {
+                if (txtPosition.Text == "Maneger")
+                {
+                    Dailybase = 200;
+                }
+                else if (txtPosition.Text == "Sub Maneger")
+                {
+                    Dailybase = 300;
+                }
+                else if (txtPosition.Text == "IT")
+                {
+
+                    Dailybase = 500;
+
+
+                }
+                else if (txtPosition.Text == "Supperferger")
+                {
+
+                    Dailybase = 780;
+
+                }
+                else if (txtPosition.Text == "Officers")
+                {
+
+                    Dailybase = 70;
+                }
+                else if (txtPosition.Text == "Security")
+                {
+
+                    Dailybase = 900;
+
+                }
+                else if (txtPosition.Text == "Accounting")
+                {
+                    Dailybase = 980;
+
+                }
+                else
+                {
+                    Dailybase = 150;
+
+
+                }
+                total = Dailybase * Convert.ToInt32(wrokedTB.Text);
+                txtrich.Text = "Employee ID:" + textBox1.Text + "\n" + "Employee Name:" + txtName.Text + "\n" + "Employee Position:" + txtPosition.Text + "\n" + "Employee Wroke:" + wrokedTB.Text + "\n" + "Day:" + Dailybase + "\n" + "Total Amount:" + total;
+            }
+        }
+    }
+}
+
+
+
+
+
+
+
+
+
+
+======================Select option sql data show===================comobox==================
+
+
+
+   private void shiplu()
+        {
+
+            SqlConnection con = new SqlConnection("Data Source=LAPTOP-O86D32ES;Initial Catalog=booking;Integrated Security=True");
+
+            con.Open();
+
+            SqlCommand cmd = new SqlCommand("select Customerid from    customer", con);
+            SqlDataReader rdr;
+            rdr = cmd.ExecuteReader();
+            DataTable dt = new DataTable();
+
+            dt.Columns.Add("Customerid", typeof(string));
+
+            dt.Load(rdr);
+
+            CustomerTB.ValueMember = "Customerid";
+            CustomerTB.DataSource = dt;
+
+
+            con.Close();
+        
+        
+        
+        
+        
+        
+        }
+
+
+
+
+
+        private void Booking_Load(object sender, EventArgs e)
+        {
+            shiplu();
+        }
+
+============================select option click the sql data ==========shiplu=========show ===========
+
+        private void hasan()
+        {
+
+
+            SqlConnection con = new SqlConnection("Data Source=LAPTOP-O86D32ES;Initial Catalog=booking;Integrated Security=True");
+
+            con.Open();
+            string mysql = "select * from customer where Customerid=" + CustomerTB.SelectedValue.ToString() + "";
+            SqlCommand cmd = new SqlCommand(mysql, con);
+            DataTable dt = new DataTable();
+            SqlDataAdapter sda = new SqlDataAdapter(cmd);
+            sda.Fill(dt);
+            foreach (DataRow dr in dt.Rows)
+            {
+
+                CustomerName.Text = "" + dr["Name"].ToString();
+            
+            
+            
+            
+            
+            
+            }
+
+
+            con.Close();
+        
+        
+        
+        
+        
+        
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+        private void CustomerTB_SelectionChangeCommitted(object sender, EventArgs e)
+        {
+            hasan();
+        }
+
+
+
+
+
+
+====================save the data show project dataview any time show ====================
+
+
+
+
+  private void populatesh()
+        {
+
+
+            SqlConnection con = new SqlConnection();
+
+
+
+            con.ConnectionString = "Data Source=LAPTOP-O86D32ES;Initial Catalog=booking;Integrated Security=True";
+            con.Open();
+            string query = "select * from Staff";
+            SqlDataAdapter sda = new SqlDataAdapter(query, con);
+            SqlCommandBuilder builder = new SqlCommandBuilder(sda);
+            var ds = new DataSet();
+            sda.Fill(ds);
+            staffDG.DataSource = ds.Tables[0];
+            con.Close();
+
+
+
+
+        }
+
+
+
+
+
+
+===================================///=======list box show display////==========save ===========data entry=====================
+
+
+        public void st()
+        {
+            SqlConnection con = new SqlConnection("Data Source=LAPTOP-O86D32ES;Initial Catalog=hospitalmanagment;Integrated Security=True");
+
+            txtlist.Items.Clear();
+
+
+            con.Open();
+
+            SqlCommand cmd = con.CreateCommand();
+            cmd.CommandType.ToString();
+            cmd.CommandText = "select Name from    Staff";
+            cmd.ExecuteNonQuery();
+            DataTable dt = new DataTable();
+            SqlDataAdapter DA = new SqlDataAdapter(cmd);
+            DA.Fill(dt);
+            foreach (DataRow dr in dt.Rows) 
+            {
+
+
+                txtlist.Items.Add(dr["Name"].ToString());
+            
+            
+            
+            
+            
+            }
+
+          
+            con.Close();
+
+
+
+
+
+
+        }
+
+
+====================list box click==========data entry=======show text box=====================================
+  private void txtlist_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            SqlConnection con = new SqlConnection("Data Source=LAPTOP-O86D32ES;Initial Catalog=hospitalmanagment;Integrated Security=True");
+
+           
+
+
+            con.Open();
+
+            SqlCommand cmd = con.CreateCommand();
+            cmd.CommandType = CommandType.Text;
+            cmd.CommandText = "select * from    Staff where Name='" + txtlist.SelectedItem.ToString() + "'";
+            cmd.ExecuteNonQuery();
+            DataTable dt = new DataTable();
+            SqlDataAdapter DA = new SqlDataAdapter(cmd);
+            DA.Fill(dt);
+            foreach (DataRow dr in dt.Rows)
+            {
+
+
+                textBox5.Text = dr["ID"].ToString();
+                textBox11.Text = dr["Name"].ToString();
+                comboBox2.Text = dr["Sex"].ToString();
+                textBox7.Text = dr["Position"].ToString();
+                textBox9.Text = dr["Salary"].ToString();
+                textBox10.Text = dr["Phone"].ToString();
+                textBox8.Text = dr["Address"].ToString();
+            }
+            con.Close();
+
+        }
+
+
+
+
+
+
+
+
+
